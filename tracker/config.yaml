@@ -1,0 +1,50 @@
+# HeadTrack 追踪程序配置
+# 运行中修改并保存后会自动热重载（camera / model_path 需重启程序才生效）。
+# 坐标约定：x 右 / y 上 / z 后 为正（cm）；yaw 右 / pitch 抬头 / roll 右歪头 为正（deg）。
+# 某个轴方向反了：把该轴的 invert 改为 true。
+
+camera:
+  index: 0          # 0 = 内置 FaceTime 摄像头
+  width: 640
+  height: 480
+  fps: 30
+
+model_path: models/face_landmarker.task   # 相对 tracker/ 目录
+
+udp:
+  host: 127.0.0.1
+  port: 4242
+
+auto_center_sec: 1.0     # 首次检测到人脸持续这么久后自动回中
+resume_blend_sec: 0.4    # 人脸丢失恢复、或回中后，从上次输出平滑过渡的时长
+
+# One Euro 滤波：先把 beta 设 0，调小 min_cutoff 直到静止不抖；再加大 beta 直到快速转头不拖。
+filter:
+  rotation:      # 单位 deg
+    min_cutoff: 0.8
+    beta: 0.02
+    d_cutoff: 1.0
+  translation:   # 单位 cm
+    min_cutoff: 0.5
+    beta: 0.05
+    d_cutoff: 1.0
+
+# 映射曲线：|头部输入| ≤ deadzone 输出 0；之后归一化到 in_max，做 expo 次方，乘 out_max。
+# 超过 in_max 后输出不再增加（即限幅）。
+axes:
+  yaw:   { in_max: 40, out_max: 150, expo: 1.4, deadzone: 1.5, invert: false, enabled: true }
+  pitch: { in_max: 25, out_max: 50,  expo: 1.4, deadzone: 1.5, invert: false, enabled: true }
+  roll:  { in_max: 20, out_max: 20,  expo: 1.0, deadzone: 2.0, invert: false, enabled: false }
+  x:     { in_max: 15, out_max: 15,  expo: 1.0, deadzone: 0.3, invert: false, enabled: true }
+  y:     { in_max: 10, out_max: 10,  expo: 1.0, deadzone: 0.3, invert: false, enabled: true }
+  z:     { in_max: 15, out_max: 15,  expo: 1.0, deadzone: 0.3, invert: false, enabled: true }
+
+# 串扰衰减：转头时人脸跟着颈部转动，看起来像位移。
+# 头部 yaw/pitch（滤波后、映射前）从 *_start 增大到 *_full 时，位移增益从 1 平滑降到 min_gain。
+translation_attenuation:
+  enabled: true
+  yaw_start: 5
+  yaw_full: 25
+  pitch_start: 5
+  pitch_full: 15
+  min_gain: 0.2

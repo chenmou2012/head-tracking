@@ -1,0 +1,6 @@
+plugin/SDK/
+plugin/build/
+__pycache__/
+*.pyc
+.DS_Store
+tracker/models/

@@ -1,0 +1,12 @@
+name: headtrack
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - numpy
+  - pyyaml
+  - pyobjc-framework-cocoa   # 禁用 App Nap，防止后台掉帧
+  - pip
+  - pip:
+      - mediapipe==1.2.0
+      - opencv-python
