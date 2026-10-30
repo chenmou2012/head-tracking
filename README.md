@@ -434,3 +434,13 @@ head-tracking/
    /Applications/Xcode.app/Contents/Developer/usr/bin/gamepolicyctl game-mode set auto
    ```
 4. 删除 `head-tracking` 文件夹。
+
+---
+
+## 许可证
+
+本项目代码以 [MIT 许可证](LICENSE) 发布。
+
+不包含在本仓库中、需要另行获取的第三方组件，遵循各自的许可：
+- X-Plane SDK：版权归 Sandy Barbour 和 Ben Supnik，许可见随 SDK 附带的 `license.txt`。
+- MediaPipe 及 `face_landmarker.task` 模型：Google，Apache License 2.0。
